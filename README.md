@@ -9,14 +9,14 @@ node --version
 ```
 
 ## Installation:
-Add the latest version of `oauth2` to your package.json:
+Add the latest version of `oauth20` to your package.json:
 ```
-npm install oauth2 --save
+npm install oauth20 --save
 ```
 
 ## Usage:
 ```js
-let OAuth2 = require('oauth2');
+let OAuth2 = require('oauth20');
 ```
 
 Give the credentials of the OAuth to the constructor
