@@ -12,6 +12,7 @@ class OAuth2 {
 		};
 		
 		this.__url = {
+			base: urlBase,
 			authorizate: urlAuthorizate,
 			token: urlToken
 		};
@@ -20,7 +21,7 @@ class OAuth2 {
 	}
 
 	authorizationUrl() {
-		return `${this.__url.authorizate}?response_type=code&client_id=${this.__credentials.clientId}&redirect_uri=${this.__credentials.redirectUrl}&scope=${this.__credentials.scopes}`;
+		return `${this.__url.base}${this.__url.authorizate}?response_type=code&client_id=${this.__credentials.clientId}&redirect_uri=${this.__credentials.redirectUrl}&scope=${this.__credentials.scopes}`;
 	}
 
 	getCredentials() {
