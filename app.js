@@ -1,7 +1,7 @@
 let request = require('axios');
 
 class OAuth2 {
-	constructor(clientId, clientSecret, redirectUrl, scopes, urlAuthorizate, urlToken) {
+	constructor(clientId, clientSecret, redirectUrl, scopes, urlBase, urlAuthorizate, urlToken) {
 		this.__credentials = {
 			clientId: clientId,
 			clientSecret: clientSecret,
@@ -15,6 +15,8 @@ class OAuth2 {
 			authorizate: urlAuthorizate,
 			token: urlToken
 		};
+
+		request.defaults.baseURL = urlBase;
 	}
 
 	authorizationUrl() {

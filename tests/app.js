@@ -15,6 +15,7 @@ describe('OAuth2', () => {
 			"clientSecret", 
 			"redirectUrl", 
 			"scopes",
+			"urlBase",
 			"auth",
 			"token");
 	  });
