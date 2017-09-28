@@ -32,6 +32,7 @@ describe('OAuth2', () => {
 		};
 
 		var url = {
+			base: 'urlBase',
 			authorizate: 'auth',
 			token: 'token'
 		};
@@ -41,7 +42,7 @@ describe('OAuth2', () => {
 	});
 
 	it('authorizationUrl() should return Url of authorization', () => 
-		expect(oauth2.authorizationUrl()).to.equal(`${oauth2.__url.authorizate}?response_type=code&client_id=${oauth2.__credentials.clientId}&redirect_uri=${oauth2.__credentials.redirectUrl}&scope=${oauth2.__credentials.scopes}`)
+		expect(oauth2.authorizationUrl()).to.equal(`${oauth2.__url.base}${oauth2.__url.authorizate}?response_type=code&client_id=${oauth2.__credentials.clientId}&redirect_uri=${oauth2.__credentials.redirectUrl}&scope=${oauth2.__credentials.scopes}`)
 	);
 
 	it('connect() should connect to oauth2 and get accessToken with code', () => {	

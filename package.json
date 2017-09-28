@@ -1,10 +1,10 @@
 {
   "name": "oauth20",
   "author": "Tomas Novas",
-  "url": "https://github.com/tnovas/oauth2",
+  "url": "https://github.com/tnovas/oauth2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tnovas/oauth2"
+    "url": "https://github.com/tnovas/oauth2.0"
   },
   "email": "tnovas@gmail.com",
   "version": "1.0.2",
