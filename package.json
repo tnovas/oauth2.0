@@ -7,7 +7,7 @@
     "url": "https://github.com/tnovas/oauth2.0"
   },
   "email": "tnovas@gmail.com",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "This module use OAuth 2.0 standard protocol for authorization - https://oauth.net/2/",
   "main": "app.js",
   "scripts": {
