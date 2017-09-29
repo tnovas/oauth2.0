@@ -45,13 +45,13 @@ describe('OAuth2', () => {
 		
 		mock.onPost(urls.token).replyOnce(200, {access_token: 'token', refresh_token: 'token'});
 
-		oauth2.connect('code', () => expect(JSON.stringify(oauth2.getCredentials())).to.equal(JSON.stringify(credentials)), (err) => console.log(err));
+		oauth2.connect('code').then(() => expect(JSON.stringify(oauth2.getCredentials())).to.equal(JSON.stringify(credentials)));
 	});
 
-	it('connect() should throw error', () => {	
-		mock.onPost(urls.token).replyOnce(500);
+	it('connect() should throw error with a message', () => {	
+		mock.onPost(urls.token).replyOnce(500, {msg: 'error'});
 
-		oauth2.connect('code', () => { }, (err) => expect(500).to.equal(err.response.status));
+		oauth2.connect('code').catch((err) => expect(500).to.equal(err.response.status));
 	});
 
 	it('getCredentials() should get credentials', () => {

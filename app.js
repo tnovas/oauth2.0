@@ -34,7 +34,7 @@ class OAuth2 {
 		};
 	}
 
-	connect(code, success, error) {
+	connect(code) {
 		let url = `${this[urls].token}`;
 		let data = {
 			grant_type: 'authorization_code',
@@ -44,21 +44,24 @@ class OAuth2 {
 			code: code
 		};
 
-		this[post](url, data, (result) => {
+		let request = this[post](url, data);
+
+		request.then((result) => {
 			this[credentials].accessToken = result.data.access_token;
 			this[credentials].refreshToken = result.data.refresh_token;
-			success();
-	    }, error);
+		}).catch((err) => {
+			console.log(`status: ${err.response.status}, url: ${err.response.config.url}, data: ${err.response.config.data}, message: ${JSON.stringify(err.response.data)}`);
+		});
+
+		return request;
 	}
 
-	[post](url, data, success, error) {
-		axios({
+	[post](url, data) {
+		return axios({
 		    method: 'POST',
 		    url: url,
 		    data: data
-		})
-		.then(success)
-	    .catch(error);
+		});
 	}
 }
 

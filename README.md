@@ -47,8 +47,6 @@ You have to make a request on `urlAuthorization` with a browser and authorizate 
 | Params   | Description     | Optional | 
 | -------- |:---------------| :-----:|
 | **Code**  | *The code you got in the querystring* | **false** |
-| **Success**  | *Callback on Success*| **true** |
-| **Error**    | *Callback on Error*  | **true** |
 
 ```js
 oauth.connect(code);
@@ -62,4 +60,12 @@ If you need to save credentials, you have to call `getCredentials` and you will 
   accessToken
   refreshToken
 }
+```
+
+### Promises
+If you add `then` to call you will take the success of response and if you add `catch` you will take the error of response.
+```js
+oauth.connect(code)
+	.then((res) => console.log(res)))
+	.catch((err) => console.log(err)))
 ```
