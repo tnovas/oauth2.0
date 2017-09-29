@@ -1,58 +1,61 @@
-let request = require('axios');
+let axios = require('axios');
+let credentials = Symbol('credentials');
+let urls = Symbol('urls');
+let post = Symbol('post');
 
 class OAuth2 {
-	constructor(clientId, clientSecret, redirectUrl, scopes, urlBase, urlAuthorizate, urlToken) {
-		this.__credentials = {
+	constructor(clientId, clientSecret, redirecturl, scopes, urlBase, urlAuthorizate, urlToken) {
+		this[credentials] = {
 			clientId: clientId,
 			clientSecret: clientSecret,
-			redirectUrl: redirectUrl,
+			redirecturl: redirecturl,
 			scopes: scopes,
 			accessToken: '',
 			refreshToken: ''
 		};
-		
-		this.__url = {
+
+		this[urls] = {
 			base: urlBase,
 			authorizate: urlAuthorizate,
 			token: urlToken
 		};
 
-		request.defaults.baseURL = urlBase;
+		axios.defaults.baseurl = urlBase;
 	}
 
 	authorizationUrl() {
-		return `${this.__url.base}${this.__url.authorizate}?response_type=code&client_id=${this.__credentials.clientId}&redirect_uri=${this.__credentials.redirectUrl}&scope=${this.__credentials.scopes}`;
+		return `${this[urls].base}${this[urls].authorizate}?response_type=code&client_id=${this[credentials].clientId}&redirect_uri=${this[credentials].redirecturl}&scope=${this[credentials].scopes}`;
 	}
 
 	getCredentials() {
 		return {
-			accessToken: this.__credentials.accessToken,
-			refreshToken: this.__credentials.refreshToken
+			accessToken: this[credentials].accessToken,
+			refreshToken: this[credentials].refreshToken
 		};
 	}
 
 	connect(code, success, error) {
-		let url = `${this.__url.token}`;
-		let body = {
+		let url = `${this[urls].token}`;
+		let data = {
 			grant_type: 'authorization_code',
-			client_id: this.__credentials.clientId,
-			client_secret: this.__credentials.clientSecret,
-			redirect_uri: this.__credentials.redirectUrl,
+			client_id: this[credentials].clientId,
+			client_secret: this[credentials].clientSecret,
+			redirect_uri: this[credentials].redirecturl,
 			code: code
 		};
 
-		this.__post(url, body, (result) => {
-			this.__credentials.accessToken = result.data.access_token;
-			this.__credentials.refreshToken = result.data.refresh_token;
+		this[post](url, data, (result) => {
+			this[credentials].accessToken = result.data.access_token;
+			this[credentials].refreshToken = result.data.refresh_token;
+			success();
 	    }, error);
 	}
 
-	__post(url, body, success, error) {
-		request({
+	[post](url, data, success, error) {
+		axios({
 		    method: 'POST',
 		    url: url,
-		    body: body,
-		    json: true
+		    data: data
 		})
 		.then(success)
 	    .catch(error);

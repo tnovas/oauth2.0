@@ -1,6 +1,5 @@
 var chai = require('chai');
 var expect = chai.expect;
-var request = require('request');
 var Oauth2 = require('../app');
 var axios = require('axios');
 var MockAdapter = require('axios-mock-adapter');
@@ -18,41 +17,39 @@ describe('OAuth2', () => {
 			"urlBase",
 			"auth",
 			"token");
-	  });
 
-
-	it('constructor() should make credentials with params', () => {
-		var credentials = {
-			clientId: "clientId",
-			clientSecret: "clientSecret",
-			redirectUrl: "redirectUrl",
+	    credentials = {
+	    	clientId: "clientId", 
+			clientSecret: "clientSecret", 
+			redirectUrl: "redirectUrl", 
 			scopes: "scopes",
-			accessToken: '',
-			refreshToken: ''
-		};
+			accessToken: "token"
+	    };
 
-		var url = {
+	    urls = {
 			base: 'urlBase',
 			authorizate: 'auth',
 			token: 'token'
 		};
-		
-		expect(JSON.stringify(oauth2.__credentials)).to.equal(JSON.stringify(credentials));
-		expect(JSON.stringify(oauth2.__url)).to.equal(JSON.stringify(url));
-	});
+	  });
 
 	it('authorizationUrl() should return Url of authorization', () => 
-		expect(oauth2.authorizationUrl()).to.equal(`${oauth2.__url.base}${oauth2.__url.authorizate}?response_type=code&client_id=${oauth2.__credentials.clientId}&redirect_uri=${oauth2.__credentials.redirectUrl}&scope=${oauth2.__credentials.scopes}`)
+		expect(oauth2.authorizationUrl()).to.equal(`${urls.base}${urls.authorizate}?response_type=code&client_id=${credentials.clientId}&redirect_uri=${credentials.redirectUrl}&scope=${credentials.scopes}`)
 	);
 
 	it('connect() should connect to oauth2 and get accessToken with code', () => {	
-		mock.onPost(oauth2.__url.token).replyOnce(200, {access_token: 'token', refresh_token: 'token'});
+		var credentials = {
+			accessToken: 'token',
+			refreshToken: 'token'
+		};
+		
+		mock.onPost(urls.token).replyOnce(200, {access_token: 'token', refresh_token: 'token'});
 
-		oauth2.connect('code', () => expect('token').to.equal(oauth2.__credentials.accessToken), (err) => console.log(err));
+		oauth2.connect('code', () => expect(JSON.stringify(oauth2.getCredentials())).to.equal(JSON.stringify(credentials)), (err) => console.log(err));
 	});
 
 	it('connect() should throw error', () => {	
-		mock.onPost(oauth2.__url.token).replyOnce(500);
+		mock.onPost(urls.token).replyOnce(500);
 
 		oauth2.connect('code', () => { }, (err) => expect(500).to.equal(err.response.status));
 	});
