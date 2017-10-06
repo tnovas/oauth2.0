@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.5] - 2017-09-29
 ### Added
+- Change connect implementation
+- Add accessToken and refreshToken on params
 - Promises
 - Add documentation promises to Readme.rm
 - Add msg of error in console when status code not is 200
