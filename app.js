@@ -4,14 +4,14 @@ let urls = Symbol('urls');
 let post = Symbol('post');
 
 class OAuth2 {
-	constructor(clientId, clientSecret, redirecturl, scopes, urlBase, urlAuthorizate, urlToken) {
+	constructor(clientId, clientSecret, redirecturl, scopes, urlBase, urlAuthorizate, urlToken, accessToken='', refreshToken='') {
 		this[credentials] = {
 			clientId: clientId,
 			clientSecret: clientSecret,
 			redirecturl: redirecturl,
 			scopes: scopes,
-			accessToken: '',
-			refreshToken: ''
+			accessToken: accessToken,
+			refreshToken: refreshToken
 		};
 
 		this[urls] = {
@@ -20,7 +20,7 @@ class OAuth2 {
 			token: urlToken
 		};
 
-		axios.defaults.baseurl = urlBase;
+		axios.defaults.baseURL = urlBase;
 	}
 
 	authorizationUrl() {
@@ -44,16 +44,14 @@ class OAuth2 {
 			code: code
 		};
 
-		let request = this[post](url, data);
-
-		request.then((result) => {
+		return this[post](url, data).then((result) => {
 			this[credentials].accessToken = result.data.access_token;
 			this[credentials].refreshToken = result.data.refresh_token;
+			return result;
 		}).catch((err) => {
 			console.log(`status: ${err.response.status}, url: ${err.response.config.url}, data: ${err.response.config.data}, message: ${JSON.stringify(err.response.data)}`);
+			return Promise.reject(err);
 		});
-
-		return request;
 	}
 
 	[post](url, data) {
