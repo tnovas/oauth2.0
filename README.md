@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/tnovas/oauth2.0.svg?branch=master)](https://travis-ci.org/tnovas/oauth2.0)
 [![Coverage Status](https://coveralls.io/repos/github/tnovas/oauth2.0/badge.svg)](https://coveralls.io/github/tnovas/oauth2.0)
 
+#### This module is a implementation of OAuth 2.0 standard protocol for authorization - https://oauth.net/2/
+
 You need nodejs version > 6x because this module was made with ES6.
 ```
 node --version
@@ -32,17 +34,18 @@ Give the credentials of the OAuth to the constructor
 | **UrlToken**       | *The path of url Token* | **false** |
 
 ```js
-let oauth2 = new OAuth2('clientId', 'clientSecret', 'http://yourdomain/youraction', 'socpes', 'https://domain/oauth/', 'auth', 'token');
+let oauth2 = new OAuth2('clientId', 'clientSecret', 'http://yourdomain/youraction', 'scopes', 'https://domain/oauth/', 'auth', 'token');
 ```
 
 ### Authorization
-To authenticate with OAuth you will call authorizationUrl()
+To authenticate with OAuth you will call `authorizationUrl` and will return an URL, you will make a request with a browser and authorizate in OAuth. After that you will be redirect to `RedirectUrl` and you will get a `code` on QueryString `?code='hjqweassxzass'`
 
 ```js
 let urlAuthorization = oauth2.authorizationUrl();
 ```
 
-You have to make a request on `urlAuthorization` with a browser and authorizate in OAuth. After that you will be redirect to `RedirectUrl` and you will get a `Code` on QueryString `?code='hjqweassxzass'` , then you have to call `connect` with `code`
+### Get Access Token
+For generate an access token and refresh token you have to call `connect` with the `code` you got on QueryString
 
 | Params   | Description     | Optional | 
 | -------- |:---------------| :-----:|
@@ -52,17 +55,29 @@ You have to make a request on `urlAuthorization` with a browser and authorizate 
 oauth.connect(code);
 ```
 
-### Get Credentials:
-If you need to save credentials, you have to call `getCredentials` and you will get an object
+### Refresh Access Token
+If you need refresh the access token, you have to call `reconnect` and send the `refreshToken`
+
+| Params   | Description     | Optional | 
+| -------- |:---------------| :-----:|
+| **RefreshToken**  | *The refresh token you got in credentials* | **false** |
+
+```js
+oauth.reconnect(refreshToken);
+```
+
+### Get Credentials
+If you need the credentials, you have to call `getCredentials` and you will get an object with:
 
 ```js
 {
-  accessToken
-  refreshToken
+  accessToken,
+  refreshToken,
+  expiresIn
 }
 ```
 
-### Promises
+#### Promises
 If you add `then` to call you will take the success of response and if you add `catch` you will take the error of response.
 ```js
 oauth.connect(code)

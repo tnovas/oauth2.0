@@ -4,14 +4,15 @@ let urls = Symbol('urls');
 let post = Symbol('post');
 
 class OAuth2 {
-	constructor(clientId, clientSecret, redirecturl, scopes, urlBase, urlAuthorizate, urlToken, accessToken='', refreshToken='') {
+	constructor(clientId, clientSecret, redirecturl, scopes, urlBase, urlAuthorizate, urlToken) {
 		this[credentials] = {
 			clientId: clientId,
 			clientSecret: clientSecret,
 			redirecturl: redirecturl,
 			scopes: scopes,
-			accessToken: accessToken,
-			refreshToken: refreshToken
+			accessToken: '',
+			refreshToken: '',
+			expiresIn: ''
 		};
 
 		this[urls] = {
@@ -30,7 +31,8 @@ class OAuth2 {
 	getCredentials() {
 		return {
 			accessToken: this[credentials].accessToken,
-			refreshToken: this[credentials].refreshToken
+			refreshToken: this[credentials].refreshToken,
+			expiresIn: this[credentials].expiresIn
 		};
 	}
 
@@ -47,10 +49,26 @@ class OAuth2 {
 		return this[post](url, data).then((result) => {
 			this[credentials].accessToken = result.data.access_token;
 			this[credentials].refreshToken = result.data.refresh_token;
+			this[credentials].expiresIn = result.data.expires_in;
+
 			return result;
-		}).catch((err) => {
-			console.log(`status: ${err.response.status}, url: ${err.response.config.url}, data: ${err.response.config.data}, message: ${JSON.stringify(err.response.data)}`);
-			return Promise.reject(err);
+		});
+	}
+
+	reconnect(refreshToken) {
+		let url = `${this[urls].token}`;
+		let data = {
+			grant_type: 'refresh_token',
+			client_id: this[credentials].clientId,
+			client_secret: this[credentials].clientSecret
+		};
+
+		return this[post](url, data).then((result) => {
+			this[credentials].accessToken = result.data.access_token;
+			this[credentials].refreshToken = refreshToken;
+			this[credentials].expiresIn = result.data.expires_in;
+
+			return result;
 		});
 	}
 
@@ -59,6 +77,9 @@ class OAuth2 {
 		    method: 'POST',
 		    url: url,
 		    data: data
+		}).catch((err) => {
+			console.log(`status: ${err.response.status}, url: ${err.response.config.url}, data: ${err.response.config.data}, message: ${JSON.stringify(err.response.data)}`);
+			return Promise.reject(err);
 		});
 	}
 }

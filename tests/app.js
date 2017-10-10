@@ -23,7 +23,9 @@ describe('OAuth2', () => {
 			clientSecret: "clientSecret", 
 			redirectUrl: "redirectUrl", 
 			scopes: "scopes",
-			accessToken: "token"
+			accessToken: "token",
+			refreshToken: "token",
+			expiresIn: 3600
 	    };
 
 	    urls = {
@@ -40,10 +42,11 @@ describe('OAuth2', () => {
 	it('connect() should connect to oauth2 and get accessToken with code', () => {	
 		var credentials = {
 			accessToken: 'token',
-			refreshToken: 'token'
+			refreshToken: 'token',
+			expiresIn: 3600
 		};
 		
-		mock.onPost(urls.token).replyOnce(200, {access_token: 'token', refresh_token: 'token'});
+		mock.onPost(urls.token).replyOnce(200, {access_token: 'token', refresh_token: 'token', expires_in: 3600});
 
 		oauth2.connect('code').then(() => expect(JSON.stringify(oauth2.getCredentials())).to.equal(JSON.stringify(credentials)));
 	});
@@ -54,10 +57,29 @@ describe('OAuth2', () => {
 		oauth2.connect('code').catch((err) => expect(500).to.equal(err.response.status));
 	});
 
+	it('reconnect() should reconnect to oauth2 and get accessToken with refreshToken', () => {	
+		var credentials = {
+			accessToken: 'token',
+			refreshToken: 'refreshToken',
+			expiresIn: 3600
+		};
+		
+		mock.onPost(urls.token).replyOnce(200, {access_token: 'token', expires_in: 3600});
+
+		oauth2.reconnect('refreshToken').then(() => expect(JSON.stringify(oauth2.getCredentials())).to.equal(JSON.stringify(credentials)));
+	});
+
+	it('reconnect() should throw error with a message', () => {	
+		mock.onPost(urls.token).replyOnce(500, {msg: 'error'});
+
+		oauth2.reconnect('refreshToken').catch((err) => expect(500).to.equal(err.response.status));
+	});
+
 	it('getCredentials() should get credentials', () => {
 		var credentials = {
 			accessToken: 'token',
-			refreshToken: 'token'
+			refreshToken: 'refreshToken',
+			expiresIn: 3600
 		};
 
 		var result = oauth2.getCredentials();

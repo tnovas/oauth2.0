@@ -1,7 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.0.5] - 2017-09-29
+## [1.0.7] - 2017-10-09
+### Added
+- Reconnect with refreshToken
+- time of expire of accessToken in getCredentials
+### Remove
+- accessToken and refreshToken from params
+### Change
+- tests
+- documentation
+
+## [1.0.6] - 2017-09-29
 ### Added
 - Change connect implementation
 - Add accessToken and refreshToken on params
