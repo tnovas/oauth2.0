@@ -2,6 +2,7 @@ let axios = require('axios');
 let credentials = Symbol('credentials');
 let urls = Symbol('urls');
 let post = Symbol('post');
+var querystring = require('querystring');
 
 class OAuth2 {
 	constructor(clientId, clientSecret, redirecturl, scopes, urlBase, urlAuthorizate, urlToken) {
@@ -21,7 +22,11 @@ class OAuth2 {
 			token: urlToken
 		};
 
-		axios.defaults.baseURL = urlBase;
+		axios = axios.create({
+		  baseURL: urlBase
+		});
+
+		axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 	}
 
 	authorizationUrl() {
@@ -60,12 +65,13 @@ class OAuth2 {
 		let data = {
 			grant_type: 'refresh_token',
 			client_id: this[credentials].clientId,
-			client_secret: this[credentials].clientSecret
+			client_secret: this[credentials].clientSecret,
+			refresh_token: refreshToken
 		};
 
 		return this[post](url, data).then((result) => {
 			this[credentials].accessToken = result.data.access_token;
-			this[credentials].refreshToken = refreshToken;
+			this[credentials].refreshToken = result.data.refresh_token;
 			this[credentials].expiresIn = result.data.expires_in;
 
 			return result;
@@ -73,11 +79,8 @@ class OAuth2 {
 	}
 
 	[post](url, data) {
-		return axios({
-		    method: 'POST',
-		    url: url,
-		    data: data
-		}).catch((err) => {
+		return axios.post(url, querystring.stringify(data))
+		.catch((err) => {
 			console.log(`status: ${err.response.status}, url: ${err.response.config.url}, data: ${err.response.config.data}, message: ${JSON.stringify(err.response.data)}`);
 			return Promise.reject(err);
 		});

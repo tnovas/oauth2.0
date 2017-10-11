@@ -1,13 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.0.7] - 2017-10-09
-### Added
+## [1.0.7] 
+### 2017-10-10
+#### Added
+- create new instance of axios
+#### Change
+- reconnect implementation
+- change content-type to application/x-www-form-urlencoded
+
+### 2017-10-09
+#### Added
 - Reconnect with refreshToken
 - time of expire of accessToken in getCredentials
-### Remove
+#### Remove
 - accessToken and refreshToken from params
-### Change
+#### Change
 - tests
 - documentation
 
