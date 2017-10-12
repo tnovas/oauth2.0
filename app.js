@@ -5,7 +5,7 @@ let postOAuth = Symbol('postOAuth');
 var querystring = require('querystring');
 
 class OAuth2 {
-	constructor(clientId, clientSecret, redirecturl, scopes, urlBase, urlAuthorizate, urlToken) {
+	constructor(clientId, clientSecret, redirecturl, scopes, urlBase, urlAuthorizate='authorize', urlToken='token', urlRevoke='revoke') {
 		this[credentialsOAuth] = {
 			clientId: clientId,
 			clientSecret: clientSecret,
@@ -19,7 +19,8 @@ class OAuth2 {
 		this[urlsOAuth] = {
 			base: urlBase,
 			authorizate: urlAuthorizate,
-			token: urlToken
+			token: urlToken,
+			revoke: urlRevoke
 		};
 
 		axios = axios.create({
@@ -71,11 +72,20 @@ class OAuth2 {
 
 		return this[postOAuth](url, data).then((result) => {
 			this[credentialsOAuth].accessToken = result.data.access_token;
-			this[credentialsOAuth].refreshToken = result.data.refresh_token;
+			this[credentialsOAuth].refreshToken = result.data.refresh_token || refreshToken;
 			this[credentialsOAuth].expiresIn = result.data.expires_in;
 
 			return result;
 		});
+	}
+
+	revoke() {
+		let url = `${this[urlsOAuth].revoke}`;
+		let data = {
+			token: this[credentialsOAuth].accessToken
+		};
+
+		return this[postOAuth](url, data);
 	}
 
 	[postOAuth](url, data) {
