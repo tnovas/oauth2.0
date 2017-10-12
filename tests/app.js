@@ -60,11 +60,11 @@ describe('OAuth2', () => {
 	it('reconnect() should reconnect to oauth2 and get accessToken with refreshToken', () => {	
 		var credentials = {
 			accessToken: 'token',
-			refreshToken: 'refreshToken',
+			refreshToken: 'token',
 			expiresIn: 3600
 		};
 		
-		mock.onPost(urls.token).replyOnce(200, {access_token: 'token', expires_in: 3600});
+		mock.onPost(urls.token).replyOnce(200, {access_token: 'token', refresh_token: 'token', expires_in: 3600});
 
 		oauth2.reconnect('refreshToken').then(() => expect(JSON.stringify(oauth2.getCredentials())).to.equal(JSON.stringify(credentials)));
 	});
@@ -78,7 +78,7 @@ describe('OAuth2', () => {
 	it('getCredentials() should get credentials', () => {
 		var credentials = {
 			accessToken: 'token',
-			refreshToken: 'refreshToken',
+			refreshToken: 'token',
 			expiresIn: 3600
 		};
 

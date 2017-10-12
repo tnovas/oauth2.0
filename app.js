@@ -1,12 +1,12 @@
 let axios = require('axios');
-let credentials = Symbol('credentials');
-let urls = Symbol('urls');
-let post = Symbol('post');
+let credentialsOAuth = Symbol('credentialsOAuth');
+let urlsOAuth = Symbol('urlsOAuth');
+let postOAuth = Symbol('postOAuth');
 var querystring = require('querystring');
 
 class OAuth2 {
 	constructor(clientId, clientSecret, redirecturl, scopes, urlBase, urlAuthorizate, urlToken) {
-		this[credentials] = {
+		this[credentialsOAuth] = {
 			clientId: clientId,
 			clientSecret: clientSecret,
 			redirecturl: redirecturl,
@@ -16,7 +16,7 @@ class OAuth2 {
 			expiresIn: ''
 		};
 
-		this[urls] = {
+		this[urlsOAuth] = {
 			base: urlBase,
 			authorizate: urlAuthorizate,
 			token: urlToken
@@ -30,55 +30,55 @@ class OAuth2 {
 	}
 
 	authorizationUrl() {
-		return `${this[urls].base}${this[urls].authorizate}?response_type=code&client_id=${this[credentials].clientId}&redirect_uri=${this[credentials].redirecturl}&scope=${this[credentials].scopes}`;
+		return `${this[urlsOAuth].base}${this[urlsOAuth].authorizate}?response_type=code&client_id=${this[credentialsOAuth].clientId}&redirect_uri=${this[credentialsOAuth].redirecturl}&scope=${this[credentialsOAuth].scopes}`;
 	}
 
 	getCredentials() {
 		return {
-			accessToken: this[credentials].accessToken,
-			refreshToken: this[credentials].refreshToken,
-			expiresIn: this[credentials].expiresIn
+			accessToken: this[credentialsOAuth].accessToken,
+			refreshToken: this[credentialsOAuth].refreshToken,
+			expiresIn: this[credentialsOAuth].expiresIn
 		};
 	}
 
 	connect(code) {
-		let url = `${this[urls].token}`;
+		let url = `${this[urlsOAuth].token}`;
 		let data = {
 			grant_type: 'authorization_code',
-			client_id: this[credentials].clientId,
-			client_secret: this[credentials].clientSecret,
-			redirect_uri: this[credentials].redirecturl,
+			client_id: this[credentialsOAuth].clientId,
+			client_secret: this[credentialsOAuth].clientSecret,
+			redirect_uri: this[credentialsOAuth].redirecturl,
 			code: code
 		};
 
-		return this[post](url, data).then((result) => {
-			this[credentials].accessToken = result.data.access_token;
-			this[credentials].refreshToken = result.data.refresh_token;
-			this[credentials].expiresIn = result.data.expires_in;
+		return this[postOAuth](url, data).then((result) => {
+			this[credentialsOAuth].accessToken = result.data.access_token;
+			this[credentialsOAuth].refreshToken = result.data.refresh_token;
+			this[credentialsOAuth].expiresIn = result.data.expires_in;
 
 			return result;
 		});
 	}
 
 	reconnect(refreshToken) {
-		let url = `${this[urls].token}`;
+		let url = `${this[urlsOAuth].token}`;
 		let data = {
 			grant_type: 'refresh_token',
-			client_id: this[credentials].clientId,
-			client_secret: this[credentials].clientSecret,
+			client_id: this[credentialsOAuth].clientId,
+			client_secret: this[credentialsOAuth].clientSecret,
 			refresh_token: refreshToken
 		};
 
-		return this[post](url, data).then((result) => {
-			this[credentials].accessToken = result.data.access_token;
-			this[credentials].refreshToken = result.data.refresh_token;
-			this[credentials].expiresIn = result.data.expires_in;
+		return this[postOAuth](url, data).then((result) => {
+			this[credentialsOAuth].accessToken = result.data.access_token;
+			this[credentialsOAuth].refreshToken = result.data.refresh_token;
+			this[credentialsOAuth].expiresIn = result.data.expires_in;
 
 			return result;
 		});
 	}
 
-	[post](url, data) {
+	[postOAuth](url, data) {
 		return axios.post(url, querystring.stringify(data))
 		.catch((err) => {
 			console.log(`status: ${err.response.status}, url: ${err.response.config.url}, data: ${err.response.config.data}, message: ${JSON.stringify(err.response.data)}`);
