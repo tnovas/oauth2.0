@@ -85,7 +85,13 @@ class OAuth2 {
 			token: this[credentialsOAuth].accessToken
 		};
 
-		return this[postOAuth](url, data);
+		return this[postOAuth](url, data).then((result) => {
+			this[credentialsOAuth].accessToken = '';
+			this[credentialsOAuth].refreshToken = '';
+			this[credentialsOAuth].expiresIn = 0;
+
+			return result;
+		});
 	}
 
 	[postOAuth](url, data) {
