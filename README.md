@@ -29,12 +29,13 @@ Give the credentials of the OAuth to the constructor
 | **ClientSecret** | *The Client Secret* | **false** |
 | **RedirectUrl**  | *The RedirectUrl with format 'http://yourdomain/youraction'* | **false** |
 | **Scopes**       | *The scopes* | **false** |
+| **AccessToken**   | *The access token if you have one* | **false** |
 | **UrlBase**       | *The url base of Authentication* | **false** |
-| **UrlAuthorizate** | *The path of url Authorization* | **false** |
-| **UrlToken**       | *The path of url Token* | **false** |
+| **UrlAuthorizate** | *The path of url Authorization. Default is authorize* | **true** |
+| **UrlToken**       | *The path of url Token. Default is token* | **true** |
 
 ```js
-let oauth2 = new OAuth2('clientId', 'clientSecret', 'http://yourdomain/youraction', 'scopes', 'https://domain/oauth/', 'auth', 'token');
+let oauth2 = new OAuth2('clientId', 'clientSecret', 'http://yourdomain/youraction', 'scopes', 'accessToken', 'https://domain/oauth/', 'auth', 'token');
 ```
 
 ### Authorization

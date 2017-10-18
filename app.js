@@ -2,16 +2,16 @@ let axios = require('axios');
 let credentialsOAuth = Symbol('credentialsOAuth');
 let urlsOAuth = Symbol('urlsOAuth');
 let postOAuth = Symbol('postOAuth');
-var querystring = require('querystring');
+let querystring = require('querystring');
 
 class OAuth2 {
-	constructor(clientId, clientSecret, redirecturl, scopes, urlBase, urlAuthorizate='authorize', urlToken='token', urlRevoke='revoke') {
+	constructor(clientId, clientSecret, redirecturl, scopes, accessToken, urlBase, urlAuthorizate='authorize', urlToken='token', urlRevoke='revoke') {
 		this[credentialsOAuth] = {
 			clientId: clientId,
 			clientSecret: clientSecret,
 			redirecturl: redirecturl,
 			scopes: scopes,
-			accessToken: '',
+			accessToken: accessToken,
 			refreshToken: '',
 			expiresIn: ''
 		};
