@@ -23,11 +23,11 @@ class OAuth2 {
 			revoke: urlRevoke
 		};
 
-		axios = axios.create({
+		this.axios = axios.create({
 		  baseURL: urlBase
 		});
 
-		axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+		this.axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 	}
 
 	authorizationUrl() {
@@ -95,7 +95,7 @@ class OAuth2 {
 	}
 
 	[postOAuth](url, data) {
-		return axios.post(url, querystring.stringify(data))
+		return this.axios.post(url, querystring.stringify(data))
 		.catch((err) => {
 			console.log(`status: ${err.response.status}, url: ${err.response.config.url}, data: ${err.response.config.data}, message: ${JSON.stringify(err.response.data)}`);
 			return Promise.reject(err);
