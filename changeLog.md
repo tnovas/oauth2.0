@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [3.0.0] - 2019-08-XX
+#### Security
+- **BREAKING** update Axios and dependecies
+
 ## [2.0.0] - 2017-10-18
 #### Added
 - revoke access token
