@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [3.0.0] - 2019-08-XX
+## [3.0.0] - 2019-08-11
 #### Security
 - **BREAKING** update Axios and dependecies
 
